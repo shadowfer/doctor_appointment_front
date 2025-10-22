@@ -4,10 +4,17 @@ import 'home_page.dart';
 import 'messages_page.dart';
 import 'settings_page.dart';
 import 'profile_page.dart';
-import 'info_page.dart';
+import 'info_page.dart'; // Asegúrate de crear este archivo
 
-const Color kPrimaryColor = Color(0xFF7B4BFF);
+// --- CONSTANTES DE COLOR CORPORATIVO ---
+const Color kCorporatePrimaryColor = Color(
+  0xFF005691,
+); // Azul Oscuro (Primario)
+const Color kCorporateAccentColor = Color(0xFF14B8A6); // Teal/Cyan (Acento)
+// Mantenemos los nombres antiguos por si se usan en otros archivos que no me has pasado:
+const Color kPrimaryColor = kCorporatePrimaryColor;
 const Color kPrimaryLightColor = Color(0xFFE6E0FF);
+// ----------------------------------------
 
 const String kPrivacyContent = """
 Tu privacidad es fundamental para nosotros en DoctorAppointmentApp.
