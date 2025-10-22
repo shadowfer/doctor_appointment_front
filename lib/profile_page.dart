@@ -104,9 +104,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mi Perfil", style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "Editar Perfil",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: kPrimaryColor,
-        automaticallyImplyLeading: false,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ), // Para que la flecha sea blanca
       ),
       body:
           _loading

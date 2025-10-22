@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'routes.dart';
 import 'messages_page.dart';
-import 'profile_page.dart';
+import 'settings_page.dart';
 
 // Placeholder para CitasPage si aún no la tienes
 class CitasPage extends StatelessWidget {
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     const _HomeContent(),
     const CitasPage(),
     const MessagesPage(),
-    const ProfilePage(),
+    const SettingsPage(), // <-- CAMBIO AQUÍ: Ahora muestra la página de configuración
   ];
 
   void _onItemTapped(int index) {
