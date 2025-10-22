@@ -29,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.green,
           ),
         );
-        // Navegamos a la ruta '/home' solo si el login fue exitoso.
         Navigator.pushReplacementNamed(context, Routes.home);
       } on FirebaseAuthException catch (e) {
         String message;
@@ -50,11 +49,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Añadido para asegurar que el widget está montado antes de usar context
-    if (!mounted) return const SizedBox.shrink();
-
     return Scaffold(
-      backgroundColor: kPrimaryColor, // Usamos el color primario para el fondo
+      backgroundColor: kPrimaryColor,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -64,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
               // Sección de Logo/Título de la App
               const SizedBox(height: 50),
               const Icon(
-                Icons.medical_services_outlined, // Un icono médico
+                Icons.medical_services_outlined,
                 size: 100,
                 color: Colors.white,
               ),
@@ -79,8 +75,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 50),
 
-              // Tarjeta del Formulario de Login
-              // Tarjeta del Formulario de Login
               Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(
@@ -92,8 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      mainAxisSize:
-                          MainAxisSize.min, // Para que la tarjeta se ajuste
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
                           controller: emailController,
@@ -140,9 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Icons.visibility_off,
                                 color: Colors.grey,
                               ),
-                              onPressed: () {
-                                // Implementar mostrar/ocultar contraseña si se desea
-                              },
+                              onPressed: () {},
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
@@ -242,11 +233,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-              ), // Cierra Card
+              ),
             ],
           ),
         ),
-      ), // Cierra Center
-    ); // Cierra Scaffold
+      ),
+    );
   }
 }

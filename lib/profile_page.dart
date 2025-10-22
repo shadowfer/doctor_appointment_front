@@ -104,13 +104,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Editar Perfil",
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text("Mi Perfil", style: TextStyle(color: Colors.white)),
         backgroundColor: kPrimaryColor,
-        elevation: 2,
-        iconTheme: const IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: false,
       ),
       body:
           _loading
