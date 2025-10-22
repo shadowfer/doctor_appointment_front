@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Importaciones de todas tus páginas
 import 'login_page.dart';
 import 'home_page.dart';
 import 'messages_page.dart';
@@ -8,7 +7,6 @@ import 'settings_page.dart';
 import 'profile_page.dart';
 import 'info_page.dart';
 
-// --- Constantes de Estilo y Contenido ---
 const Color kPrimaryColor = Color(0xFF7B4BFF);
 const Color kPrimaryLightColor = Color(0xFFE6E0FF);
 
@@ -34,7 +32,6 @@ Implementar un flujo de navegación completo y funcional en Flutter, conectando 
 -   Backend: Firebase Authentication & Cloud Firestore
 """;
 
-/// Clase para gestionar las rutas de la aplicación de forma centralizada.
 class Routes {
   static const String login = '/';
   static const String home = '/home';
@@ -44,8 +41,6 @@ class Routes {
   static const String privacy = '/privacy';
   static const String aboutUs = '/aboutUs';
 
-  // --- MÉTODO CON MAPA (SIN SWITCH) ---
-  // 1. Definimos un mapa que asocia nombres de ruta con constructores de widgets.
   static final Map<String, WidgetBuilder> _routesMap = {
     login: (context) => const LoginPage(),
     home: (context) => const HomePage(),
@@ -64,21 +59,16 @@ class Routes {
         ),
   };
 
-  /// Generador de rutas que ahora usa el mapa.
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
-    // 2. Buscamos el constructor en el mapa usando el nombre de la ruta.
     final builder = _routesMap[settings.name];
 
     if (builder != null) {
-      // 3. Si se encuentra, creamos la ruta.
       return MaterialPageRoute(builder: builder);
     }
 
-    // 4. Si no, mostramos la pantalla de error.
     return _errorRoute(settings.name);
   }
 
-  // Ruta de error auxiliar para rutas no definidas
   static Route<dynamic> _errorRoute(String? routeName) {
     return MaterialPageRoute(
       builder:

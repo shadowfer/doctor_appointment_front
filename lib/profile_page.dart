@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'routes.dart'; // Importamos para usar kPrimaryColor
+import 'routes.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,16 +10,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // Mantenemos tu lógica de controladores y referencias a Firebase.
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final _formKey = GlobalKey<FormState>(); // Clave para validar el formulario
+  final _formKey = GlobalKey<FormState>();
   final _nombreController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _enfermedadesController = TextEditingController();
 
-  bool _loading = true; // Inicia en true para mostrar carga al abrir
+  bool _loading = true;
 
   @override
   void initState() {
@@ -29,14 +28,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void dispose() {
-    // Limpiamos los controladores para liberar memoria.
     _nombreController.dispose();
     _telefonoController.dispose();
     _enfermedadesController.dispose();
     super.dispose();
   }
 
-  // Tu lógica para cargar datos, ligeramente ajustada para el manejo de estado.
   Future<void> _loadUserData() async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -59,9 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Tu lógica para guardar datos, integrada con el rediseño y validación.
   Future<void> _saveUserData() async {
-    // Primero, validamos que el formulario cumpla las reglas (ej. nombre no vacío)
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -73,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() => _loading = true);
 
     try {
-      // Guardamos los datos en Firestore.
       await _firestore.collection('usuarios').doc(user.uid).set({
         'nombre': _nombreController.text.trim(),
         'telefono': _telefonoController.text.trim(),
@@ -81,7 +75,6 @@ class _ProfilePageState extends State<ProfilePage> {
         'email': user.email,
       }, SetOptions(merge: true));
 
-      // Actualizamos también el nombre de perfil de Firebase Auth
       if (user.displayName != _nombreController.text.trim()) {
         await user.updateDisplayName(_nombreController.text.trim());
       }
@@ -93,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Colors.green,
         ),
       );
-      Navigator.pop(context); // Volvemos a la pantalla de Configuración
+      Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -111,9 +104,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Editar Perfil"),
+        title: const Text(
+          "Editar Perfil",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: kPrimaryColor,
         elevation: 2,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body:
           _loading
@@ -171,7 +168,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  /// Widget reutilizable para crear campos de texto con nuestro estilo.
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,

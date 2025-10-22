@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'routes.dart'; // Para kPrimaryColor y kPrimaryLightColor
+import 'routes.dart';
 
 class SettingsPage extends StatelessWidget {
-  // SOLUCIÓN: Se añade 'const' al constructor.
   const SettingsPage({super.key});
 
-  // --- Función de Cerrar Sesión (Log Out) ---
   Future<void> _signOut(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
-      // Usamos 'mounted' para asegurar que el widget todavía existe.
       if (!context.mounted) return;
-      // Navegamos al Login y eliminamos todas las rutas anteriores
       Navigator.of(
         context,
       ).pushNamedAndRemoveUntil(Routes.login, (Route<dynamic> route) => false);
     } catch (e) {
       if (!context.mounted) return;
-      // Manejo de errores
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al cerrar sesión: ${e.toString()}')),
       );
@@ -28,7 +23,6 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
-    // Tomamos el nombre del usuario
     String displayName = user?.displayName ?? user?.email ?? 'Usuario';
     if (displayName.contains('@')) {
       displayName = displayName.split('@')[0];
@@ -44,12 +38,11 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 1,
         shadowColor: Colors.grey.withOpacity(0.3),
-        automaticallyImplyLeading: false, // Ocultar flecha de regreso
+        automaticallyImplyLeading: false,
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 20),
         children: [
-          // --- Cabecera de Usuario ---
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
@@ -80,8 +73,6 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 30),
-
-          // --- Opciones de Configuración ---
           _buildSettingsTile(
             context,
             icon: Icons.person_outline,
@@ -110,7 +101,6 @@ class SettingsPage extends StatelessWidget {
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),
 
-          // --- Botón de Cerrar Sesión ---
           _buildSettingsTile(
             context,
             icon: Icons.logout,
@@ -125,7 +115,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // Widget para una fila de configuración
   Widget _buildSettingsTile(
     BuildContext context, {
     required IconData icon,

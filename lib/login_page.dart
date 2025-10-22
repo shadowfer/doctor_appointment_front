@@ -1,7 +1,6 @@
 import 'package:doctor_appointment_front/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,13 +11,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController =
-      TextEditingController(); // Email
-  final TextEditingController passwordController =
-      TextEditingController(); // Contraseña
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Login
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -26,13 +22,14 @@ class _LoginPageState extends State<LoginPage> {
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Bienvenido de nuevo ${userCredential.user!.email}'),
             backgroundColor: Colors.green,
           ),
         );
-        // Navegamos a la ruta '/home' y eliminamos la pila anterior
+        // Navegamos a la ruta '/home' solo si el login fue exitoso.
         Navigator.pushReplacementNamed(context, Routes.home);
       } on FirebaseAuthException catch (e) {
         String message;
@@ -43,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           message = 'Error: ${e.message}';
         }
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(message), backgroundColor: Colors.red),
         );
@@ -52,124 +50,203 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Añadido para asegurar que el widget está montado antes de usar context
+    if (!mounted) return const SizedBox.shrink();
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F9),
+      backgroundColor: kPrimaryColor, // Usamos el color primario para el fondo
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Título
-                const SizedBox(
-                  height: 150,
-                  child: Center(
-                    child: Text(
-                      'Bienvenida App de Citas',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF673AB7),
-                      ),
-                    ),
-                  ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Sección de Logo/Título de la App
+              const SizedBox(height: 50),
+              const Icon(
+                Icons.medical_services_outlined, // Un icono médico
+                size: 100,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'DoctorApp',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                const SizedBox(height: 30),
+              ),
+              const SizedBox(height: 50),
 
-                // Email
-                TextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter Username',
-                    prefixIcon: Icon(Icons.person_outline),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El email es obligatorio';
-                    }
-                    return null;
-                  },
+              // Tarjeta del Formulario de Login
+              // Tarjeta del Formulario de Login
+              Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                const SizedBox(height: 16),
-
-                // Contraseña
-                TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter Password',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: Icon(Icons.visibility_off),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'La contraseña es obligatoria';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 8),
-
-                // Olvidó contraseña
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Pronto disponible: Recuperar contraseña',
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize:
+                          MainAxisSize.min, // Para que la tarjeta se ajuste
+                      children: [
+                        TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            hintText: 'Correo electrónico',
+                            prefixIcon: const Icon(
+                              Icons.person_outline,
+                              color: Colors.grey,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: kPrimaryColor,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'El correo es obligatorio';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: 'Contraseña',
+                            prefixIcon: const Icon(
+                              Icons.lock_outline,
+                              color: Colors.grey,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: const Icon(
+                                Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                // Implementar mostrar/ocultar contraseña si se desea
+                              },
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: kPrimaryColor,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'La contraseña es obligatoria';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Pronto disponible: Recuperar contraseña',
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              '¿Olvidó su contraseña?',
+                              style: TextStyle(color: kPrimaryColor),
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    child: const Text('¿Olvidó su contraseña?'),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _login,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: kPrimaryColor,
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              'INICIAR SESIÓN',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Divider(),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Próximamente: Crear cuenta nueva',
+                                  ),
+                                ),
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: kPrimaryColor,
+                              side: const BorderSide(color: kPrimaryColor),
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              'CREAR CUENTA NUEVA',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 24),
-
-                // Botón Iniciar
-                ElevatedButton(onPressed: _login, child: const Text('LOG IN')),
-                const SizedBox(height: 30),
-
-                // Crear cuenta
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have any account?"),
-                    TextButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Proximamente: Crear cuenta nueva'),
-                          ),
-                        );
-                      },
-                      child: const Text('Create Account'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ), // Cierra Card
+            ],
           ),
         ),
-      ),
-    );
+      ), // Cierra Center
+    ); // Cierra Scaffold
   }
 }
